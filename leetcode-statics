@@ -5,39 +5,79 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import time
 
-bower = webdriver.Chrome()
-bower.get('https://leetcode-cn.com/accounts/login/')
 
-time.sleep(2)
-bower.find_element_by_name('login').send_keys('xiongwenwu1997@126.com')
-time.sleep(2)
-bower.find_element_by_name('password').send_keys('xxxx')
-time.sleep(2)
-bower.find_element(By.XPATH, '//button[1]').click()
-time.sleep(2)
+def collect():
+    bower = webdriver.Chrome()
+    bower.get('https://leetcode-cn.com/accounts/login/')
 
-bower.get('https://leetcode-cn.com/problemset/all/')
-time.sleep(2)
+    time.sleep(2)
+    bower.find_element_by_name('login').send_keys('xiongwenwu1997@126.com')
+    time.sleep(2)
+    bower.find_element_by_name('password').send_keys('xxxx')
+    time.sleep(2)
+    bower.find_element(By.XPATH, '//button[1]').click()
+    time.sleep(2)
 
-tbodys = bower.find_elements_by_xpath("//tbody[2]")
-time.sleep(2)
-select =  tbodys[0]
-#select.find_element_by_xpath("//option[@value='9007199254740991']").click()
-select.find_element_by_xpath("//option[@value='20']").click()
-time.sleep(2)
+    bower.get('https://leetcode-cn.com/problemset/algorithms/')
+    time.sleep(2)
 
-bower.get('https://leetcode-cn.com/problems/two-sum/')
-time.sleep(2)
+    show_num_select = bower.find_elements_by_xpath("//tbody[2]")[0]
+    show_num_select.find_element_by_xpath("//option[@value='9007199254740991']").click()
+    # select.find_element_by_xpath("//option[@value='20']").click()
 
-compnay = bower.find_elements_by_class_name('company-tag-wrapper__1DTg')
-compnies = compnay[0].find_elements_by_class_name('company-tag__2trG')
-print len(compnies)
-#google = compnies[0].get_attribute('href')
-aws = compnies[0]
-a=aws.find_element_by_tag_name('div')
-print a.get_attribute("innerHTML")
+    time.sleep(2)
+
+    # bower.get('https://leetcode-cn.com/problems/two-sum/')
+    # time.sleep(2)
+
+    # # 难度
+    # print bower.find_elements_by_xpath(".//span[@class='css-14oznsj-Difficulty e5i1odf5']")[1].get_attribute(
+    #     'data-degree')
+    # # 分类tag
+    # tags = bower.find_elements_by_class_name('topic-tag__1z4-')
+    # tagname = tags[0].get_attribute("innerText")
+    # print tagname
+    #
+    # compnay = bower.find_elements_by_class_name('company-tag-wrapper__1DTg')
+    # compnies = compnay[0].find_elements_by_class_name('company-tag__2trG')
+    # print len(compnies)
+    # # google = compnies[0].get_attribute('href')
+    # aws = compnies[0]
+    # a = aws.find_element_by_tag_name('div')
+    # print a.get_attribute("innerHTML")
+    problems_body = bower.find_elements_by_xpath("//tbody[1]")[0]
+    problems = problems_body.find_elements_by_xpath('//tr')
+    print len(problems)
+    #for problem in problems:
+    #    get_problem_detail(bower, problem)
+    bower.get('https://leetcode-cn.com/problems/flower-planting-with-no-adjacent/')
+    times = bower.find_elements_by_class_name('time-period-button-group__2vI1')[0]
+    disables = times.find_elements_by_tag_name('button')
+    disable0 = disables[0].get_attribute('disabled')
+    disable1 = disables[1].get_attribute('disabled')
+    disable2 = disables[2].get_attribute('disabled')
+    disable2 = disables[2].get_attribute('disabled')
 
 
 
+def get_problem_detail(bower, problem):
+    try:
+        tds = problem.find_elements_by_tag_name('td')
+        if len(tds) != 7:
+            return
+        id = tds[1].get_attribute("innerText")
+        en_name = tds[2].get_attribute('value')
+        problem_url = tds[2].find_element_by_xpath('.//div[1]//a').get_attribute('href')
+        cn_name = tds[2].find_element_by_xpath('.//div[1]//a').get_attribute("innerText")
+        degree = tds[5].find_element_by_xpath('.//span').get_attribute("innerText")
+        print id, cn_name, en_name, problem_url, degree
+        bower.get(bower, problem_url)
+        time.sleep(0.3)
 
 
+    except Exception as e:
+        print e.message
+
+
+if __name__ == '__main__':
+    collect()
