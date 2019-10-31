@@ -1,0 +1,115 @@
+# -*- coding=utf-8 -*-
+# author=zyq
+import time, os
+
+
+class Template_mixin(object):
+    """html报告"""
+    HTML_TMPL = """
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>自动化测试报告</title>
+            <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+            <h1 style="font-family: Microsoft YaHei">自动化测试报告</h1>
+            <p class='attribute'><strong>测试结果 : </strong> %(value)s</p>
+            <style type="text/css" media="screen">
+        body  { font-family: Microsoft YaHei,Tahoma,arial,helvetica,sans-serif;padding: 20px;}
+        </style>
+        </head>
+        <body>
+        <h2>
+<a href="#div1">bypinlv</a>
+<a href="#div2">bygongsi</a>
+
+</h2>
+            <div id='div1'>
+            <table id='result_table' class="table table-condensed table-bordered table-hover">
+                <colgroup>
+                    <col align='left' />
+                    <col align='right' />
+                    <col align='right' />
+                    <col align='right' />
+                </colgroup>
+                <tr id='header_row' class="text-center success" style="font-weight: bold;font-size: 14px;">
+                    <th>版本</th>
+                    <th>操作步骤</th>
+                    <th>用例执行结果</th>
+                    <th>操作时间</th>
+                </tr>
+                %(table_tr1)s
+            </table>
+            </div>
+            <div id='div2'>
+            <h2>bytedance</h2>
+            <table id='result_table' class="table table-condensed table-bordered table-hover">
+                <colgroup>
+                    <col align='left' />
+                    <col align='right' />
+                    <col align='right' />
+                    <col align='right' />
+                </colgroup>
+                <tr id='header_row' class="text-center success" style="font-weight: bold;font-size: 14px;">
+                    <th>版本</th>
+                    <th>操作步骤</th>
+                    <th>用例执行结果</th>
+                    <th>操作时间</th>
+                </tr>
+                %(table_tr2)s
+            </table>
+            </div>
+
+
+        </body>
+        </html>"""
+
+    TABLE_TMPL = """
+        <tr class='failClass warning'>
+            <td>%(version)s</td>
+            <td>%(step)s</td>
+            <td>%(runresult)s</td>
+            <td>%(runtime)s</td>
+        </tr>"""
+
+
+if __name__ == '__main__':
+    table_tr1 = ''
+    table_tr2 = ''
+    numfail = 1
+    numsucc = 9
+    html = Template_mixin()
+
+    table_td = html.TABLE_TMPL % dict(version='3.8.8', step='login_name',
+                                      runresult='login_success',
+                                      runtime=time.strftime(
+                                          '%Y-%m-%d %H:%M:%S'), )
+    for i in range(100):
+        table_tr1 += table_td
+        table_tr2 += table_td
+
+    total_str = 'total %s, pass %s,fail %s' % (numfail + numsucc, numsucc,
+                                               numfail)
+    output = html.HTML_TMPL % dict(value=total_str, table_tr1=table_tr1,
+                                   table_tr2=table_tr2)
+
+    # filename = '{date}_TestReport.html'.format(date=time.strftime(
+    # '%Y%m%d%H%M%S'))
+    filename = 'aa.html'
+
+    # dir = os.path.join(
+    #     os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'report')
+    # filename = os.path.join(dir, filename)
+
+    with open(filename, 'wb') as f:
+        f.write(output)
+    print '数组' == '数组'
+    a = ['中文','英文 ']
+    print a[0]
+    b={u'中文':'英文 '}
+    c={'中文':'英文 '}
+    print '中文' in b
+    a=['中文:3']
+    print a[0]
+    print (u'中文')
+    print int(u'2')
