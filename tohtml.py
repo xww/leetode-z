@@ -12,7 +12,7 @@ class Template_mixin(object):
         <html lang="en">
         <head>
             <meta charset="UTF-8">
-            <title>自动化测试报告</title>
+            <title>Leetcode分类统计</title>
             <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
             <h1 style="font-family: Microsoft YaHei">Leetcode分类统计</h1>
             
@@ -67,13 +67,13 @@ class Template_mixin(object):
         <tr class='failClass warning'>
             <td>%(id)s</td>
             <td>%(title)s</td>
-            <td>%(url)s</td>
+            <td><a href="%(url_href)s">%(url)s</a></td>
             <td>%(level)s</td>
             <td>%(counts)s</td>
         </tr>"""
     ONE_COM_TPL = """
     <div id='div%(divid)s'>
-            <h2>'%(com_name)s'</h2>
+            <h2>%(com_name)s</h2>
             <table id='result_table2' class="table table-condensed table-bordered table-hover">
                 <colgroup>
                     <col align='left' />
@@ -102,12 +102,12 @@ if __name__ == '__main__':
 
     leetccodestatics = problem_detail.LeetCodeStatics()
     leetccodestatics.file2probles_detail()
-    problems = leetccodestatics.probles_detail
+    problems = leetccodestatics.problems_detail
     sorted_problems = sorted(problems, cmp=problem_detail.problem_cmp)
     for p in sorted_problems:
         # print p.total_counts, p.url
 
-        table_td = html.TABLE_TMPL % dict(id=p.id, title=p.title,
+        table_td = html.TABLE_TMPL % dict(id=p.id, title=p.title, url_href=p.url,
                                           url=p.url, level=p.level, counts=p.total_counts, )
 
         table_pinlv += table_td
@@ -126,15 +126,20 @@ if __name__ == '__main__':
     for i in range(len(coms_detail)):
         print coms_detail[i].com_name, coms_detail[i].total_counts
         one_com_table = ''
-        title_href += '<h2><a href="#div' + str(i+1) + '">' + coms_detail[i].com_name + ':' + str(
+        # name_len = len(coms_detail[i].com_name + ':' + str(coms_detail[i].total_counts))
+        # need_nbsp_count = 30 - name_len
+        # one_title = '<a href="#div' + str(i + 1) + '">' + coms_detail[i].com_name + ':' + str(
+        #     coms_detail[i].total_counts) + '&nbsp;' * need_nbsp_count + '</a>'
+        one_title = '<h2><a href="#div' + str(i + 1) + '">' + coms_detail[i].com_name + ':' + str(
             coms_detail[i].total_counts) + '</a></h2>'
+        title_href += one_title
         temp_problems = copy.deepcopy(coms_detail[i].problems)
         temp_problems = sorted(temp_problems, cmp=problem_detail.owner_com_counts_cmp)
         for p in temp_problems:
-            table_td = html.TABLE_TMPL % dict(id=p.id, title=p.title,
+            table_td = html.TABLE_TMPL % dict(id=p.id, title=p.title, url_href=p.url,
                                               url=p.url, level=p.level, counts=p.owner_com_counts, )
             one_com_table += table_td
-        one_com_str = html.ONE_COM_TPL % dict(divid=str(i+1), com_name=coms_detail[i].com_name,
+        one_com_str = html.ONE_COM_TPL % dict(divid=str(i + 1), com_name=coms_detail[i].com_name,
                                               one_com_table=one_com_table)
         all_coms_str += one_com_str
 
