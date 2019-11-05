@@ -17,7 +17,7 @@ class Collection(object):
         time.sleep(2)
         self.bower.find_element_by_name('login').send_keys('xiongwenwu1997@126.com')
         time.sleep(1)
-        self.bower.find_element_by_name('password').send_keys('xxxx')
+        self.bower.find_element_by_name('password').send_keys('xwwzzy15A')
         time.sleep(1)
         self.bower.find_element(By.XPATH, '//button[1]').click()
         time.sleep(1)
@@ -52,7 +52,7 @@ class Collection(object):
         problems_body = self.bower.find_elements_by_xpath("//tbody[1]")[0]
         problems = problems_body.find_elements_by_xpath('//tr')
         print len(problems)
-        for problem in problems[0:500]:
+        for problem in problems[:]:
             self.get_problem_detail(problem)
         for problem_detail in self.problems_detail:
             self.get_problem_coms(problem_detail)
@@ -88,33 +88,37 @@ class Collection(object):
     def get_problem_coms(self, problem_detail):
         try:
             self.bower.get(problem_detail[2])
+            # self.bower.get('https://leetcode-cn.com/problems/happy-number/')
             time.sleep(2)
 
             coms_static = {}
             time_periods = self.bower.find_elements_by_class_name('time-period-button-group__2vI1')[
                 0].find_elements_by_tag_name('button')
             # 先展开公司 否则无法直接点击加载更多
-            self.bower.find_element_by_class_name('header__1If0').click()
-            time.sleep(1)
+            try:
+                self.bower.find_element_by_class_name('header__1If0').click()
+                time.sleep(2)
+            except Exception as e:
+                print e.message, 'aa'
 
             for time_period in time_periods:
                 if time_period.get_attribute('disabled') == 'true':
                     continue
                 try:
                     time_period.click()
-                    time.sleep(1)
+                    time.sleep(2)
                 except Exception as e:
                     # 半年内这个标签是默认选中的，貌似click会报错
-                    print e.message
+                    print e.message, 'bb'
 
                 try:
                     # 加载更多,可能没有这个选项，所以会有异常
                     load_more = self.bower.find_element_by_class_name('load-more__2Cip')
 
                     load_more.find_element_by_tag_name('div').click()
-                    time.sleep(1)
-                except Exception:
-                    pass
+                    time.sleep(2)
+                except Exception as e:
+                    print e.message, 'cc'
 
                 coms = self.bower.find_elements_by_class_name('company-tag-wrapper__1DTg')[0]. \
                     find_elements_by_class_name('company-tag__2trG')
@@ -125,6 +129,7 @@ class Collection(object):
                     try:
                         count = int(com_name_and_counts[2])
                     except Exception:
+                        print 'dd'
                         count = 1
                     if coms_static.get(com_name_and_counts[0]):
                         coms_static[com_name_and_counts[0]] = coms_static[com_name_and_counts[0]] + count
@@ -137,7 +142,7 @@ class Collection(object):
             print ','.join(problem_detail)
 
         except Exception as e:
-            print e.message
+            print e.message, 'ee'
 
 
 if __name__ == '__main__':
