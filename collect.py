@@ -15,9 +15,9 @@ class Collection(object):
         self.bower.get('https://leetcode-cn.com/accounts/login/')
 
         time.sleep(2)
-        self.bower.find_element_by_name('login').send_keys('xiongwenwu1997@126.com')
+        self.bower.find_element_by_name('login').send_keys('xxxx')
         time.sleep(1)
-        self.bower.find_element_by_name('password').send_keys('xwwzzy15A')
+        self.bower.find_element_by_name('password').send_keys('xxxx')
         time.sleep(1)
         self.bower.find_element(By.XPATH, '//button[1]').click()
         time.sleep(1)
